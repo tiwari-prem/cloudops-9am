@@ -26,7 +26,22 @@ resource "aws_instance" "instance_web_1" {
     }
 }
 
-
+resource "aws_instance" "instance_web_2" {
+    ami = "${var.EC2_AMI_ID}"
+    instance_type = "${var.AWS_INSTANCE_TYPE}"
+    availability_zone = "us-west-2b"
+    subnet_id = "${aws_subnet.cloudops_public_subnet_1.id}"
+    user_data = <<EOF
+                 #! /bin/bash
+                 yum install httpd -y
+                 service httpd start
+                 echo "<h3>Welcome to terraform</h3>" > /var/www/html/index.html
+                 chkconfig httpd on
+                EOF
+    tags {
+      Name = "WebServer-2"
+    }
+}
 
 
 
